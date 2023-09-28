@@ -770,3 +770,8 @@ if (file_exists(DRUPAL_ROOT . '/sites/settings.dev.php')) {
 if ( !empty(getenv('VCAP_APPLICATION')) ) {
   include $app_root . '/' . $site_path . '/settings.cloudgov.php';
 }
+
+// Pull in anything special for woc developement
+if (file_exists(DRUPAL_ROOT . '/sites/default/settings.woc.php')) {
+  include DRUPAL_ROOT . '/sites/default/settings.woc.php';
+}
