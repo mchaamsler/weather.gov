@@ -86,3 +86,6 @@ jobs:
 
       - name: run unit tests
         run: vendor/bin/phpunit
+
+  # accessibility:
+  #   name: Cypress accessibility tests
