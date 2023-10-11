@@ -1,0 +1,9 @@
+name: accessibility
+on:
+  pull_request:
+  merge_group:
+# Comment
+jobs:
+    cypress:
+        name: Cypress e2e accessibility testing
+        runs-on: ubuntu-latest
