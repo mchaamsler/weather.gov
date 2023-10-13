@@ -36,7 +36,8 @@ generate_string()
 # fi
 
 cf target -o sandbox-gsa
-NAME=$(cf spaces | tail -1)
+# NAME=$(cf spaces | tail -1)
+NAME=claire
 
 read -p "Are you logged in to the sandbox-gsa CF org above? (y/n) " -n 1 -r
 echo
