@@ -1,6 +1,6 @@
 export home="/home/vcap"
 
-## Updated ~/.bashrc to update $PATH when someone logs in.
+## Updated ~/.bashrc to update $PATH when someone logs in. Allows us to run drush commands.
 [ -z $(cat ${home}/.bashrc | grep PATH) ] && \
   touch ${home}/.bashrc && \
   echo "alias nano=\"${home}/deps/0/apt/bin/nano\"" >> ${home}/.bashrc && \
@@ -8,11 +8,8 @@ export home="/home/vcap"
 
 source ${home}/.bashrc
 
+# Get secrets in order to install with username and password
 SECRETS=$(echo "$VCAP_SERVICES" | jq -r '.["user-provided"][] | select(.name == "secrets") | .credentials')
-APP_NAME=$(echo "$VCAP_APPLICATION" | jq -r '.name')
-APP_ROOT=$(dirname "${BASH_SOURCE[0]}")
-DOC_ROOT="$APP_ROOT/web"
-APP_ID=$(echo "$VCAP_APPLICATION" | jq -r '.application_id')
 
 install_drupal() {
   ROOT_USER_NAME=$(echo "$SECRETS" | jq -r '.ROOT_USER_NAME')
@@ -28,10 +25,5 @@ install_drupal() {
       --existing-config
 }
 
-if [ "${CF_INSTANCE_INDEX:-''}" == "0" ] && [ "${APP_NAME}" == "weathergov-beta" ]; then
-  # If there is no "config:import" command, Drupal needs to be installed
-  drush list | grep "config:import" > /dev/null || install_drupal
-  
-  # Clear the cache
-  drush cache:rebuild --no-interaction
-fi
+# If no config present, perform initial install
+drush list | grep "config:import" > /dev/null || install_drupal
