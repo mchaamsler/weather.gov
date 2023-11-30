@@ -18,6 +18,8 @@ class LocationSearchBlock extends WeatherBlockBase {
    */
   public function build() {
     $location = $this->getLocation();
+    $place = NULL;
+    $metadata = [];
 
     if ($location->grid) {
       $grid = $location->grid;
@@ -28,14 +30,16 @@ class LocationSearchBlock extends WeatherBlockBase {
       );
 
       if ($data) {
-        return [
-          'place' => $data,
-        ];
+        $place = $data;
       }
+
+      $metadata["grid"] = $grid;
+      $metadata["geometry"] = $location->geometry;
     }
 
     return [
-      'place' => NULL,
+      'place' => $place,
+      'metadata' => $metadata,
     ];
   }
 

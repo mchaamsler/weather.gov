@@ -46,8 +46,21 @@ final class LocationSearchBlockTest extends TestCase {
 
     $this->weatherData = $this->createStub(WeatherDataService::class);
 
+    $this->weatherData
+    ->method('getPlaceFromGrid')
+    ->willReturn([
+      "city" => "Cityville",
+      "state" => "East Statesberg",
+    ]);
+
     $this->routeMock = $this->createStub(RouteMatchInterface::class);
+
     $this->routeMock->method('getRouteName')->willReturn("weather_routes.grid");
+    $this->routeMock->method("getParameter")->will($this->returnValueMap([
+      ["wfo", "wfo code"],
+      ["gridX", "grid x"],
+      ["gridY", "grid y"],
+    ]));
 
     $this->locationSearchBlock = new LocationSearchBlock([], '', $definition, $this->weatherData, $this->routeMock);
   }
@@ -59,10 +72,24 @@ final class LocationSearchBlockTest extends TestCase {
 
     $this->weatherData
       ->method('getPlaceFromGrid')
-      ->willReturn("hiya");
+      ->willReturn([
+        "city" => "Cityville",
+        "state" => "East Statesberg",
+      ]);
 
     $expected = [
-      "place" => "hiya",
+      "place" => [
+        "city" => "Cityville",
+        "state" => "East Statesberg",
+      ],
+      "metadata" => [
+        "grid" => (object) [
+          "wfo" => "WFO CODE",
+          "x" => "grid x",
+          "y" => "grid y",
+        ],
+        "geometry" => NULL,
+      ],
     ];
 
     $actual = $this->locationSearchBlock->build();
@@ -74,16 +101,23 @@ final class LocationSearchBlockTest extends TestCase {
    * Test that the build method returns NULL if there is no location.
    */
   public function testWithNoLocation() : void {
+    $definition = [
+      "provider" => "weather_blocks",
+    ];
 
-    $this->routeMock
+    $routeMock = $this->createStub(RouteMatchInterface::class);
+    $routeMock
       ->method('getRouteName')
       ->willReturn("not grid");
 
+    $locationSearchBlock = new LocationSearchBlock([], '', $definition, $this->weatherData, $routeMock);
+
     $expected = [
       "place" => NULL,
+      "metadata" => [],
     ];
 
-    $actual = $this->locationSearchBlock->build();
+    $actual = $locationSearchBlock->build();
 
     $this->assertEquals((object) $expected, (object) $actual);
   }

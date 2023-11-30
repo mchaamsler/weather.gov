@@ -133,6 +133,7 @@ abstract class WeatherBlockBase extends BlockBase implements ContainerFactoryPlu
   public function getLocation() {
     $location = (object) [
       "grid" => FALSE,
+      "geometry" => FALSE,
     ];
 
     // If we're on a grid route, pull location from the URL.
@@ -142,11 +143,15 @@ abstract class WeatherBlockBase extends BlockBase implements ContainerFactoryPlu
       $x = $this->route->getParameter("gridX");
       $y = $this->route->getParameter("gridY");
 
+      $geometry = $this->weatherData->getGeometryFromGrid($wfo, $x, $y);
+
       $location->grid = (object) [
         "wfo" => strtoupper($wfo),
         "x" => $x,
         "y" => $y,
       ];
+
+      $location->geometry = $geometry;
     }
     // Otherwise, attempt to get it from configuration.
     else {

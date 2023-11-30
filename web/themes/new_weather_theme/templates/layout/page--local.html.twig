@@ -177,6 +177,13 @@
       {% if page.location %}{{ page.location }}{% endif %}
       {% if page.current_conditions %}{{ page.current_conditions }}{% endif %}
       {% if page.forecast %}{{ page.forecast }}{% endif %}
+
+        <div class="grid-col-12">
+          <div id="weathergov_location_radar" style="height: 300px;">
+            <div id="weathergov_location_radar_timestamp" class="z-top bg-white padding-1 margin-1 radius-lg text-bold" style="position:absolute;bottom:0;"></div>
+          </div>
+        </div>
+
       {% if page.wfo_local_content %}{{ page.wfo_local_content }}{% endif %}
     </div>
   </main>

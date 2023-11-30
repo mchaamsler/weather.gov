@@ -83,6 +83,8 @@ class WeatherDataService {
         __DIR__ . "/legacyMapping.json"
       )
     );
+
+    $this->__API_CACHE = [];
   }
 
   /**
@@ -219,6 +221,15 @@ class WeatherDataService {
     $apiConditionKey = implode("/", $path);
 
     return $apiConditionKey;
+  }
+
+  public function apiCall($url) {
+    if(!array_key_exists($url, $this->__API_CACHE)) {
+      $response = $this->client->get($url);
+      $response = json_decode($response->getBody());
+      $this->__API_CACHE[$url] = $response;
+    }
+    return $this->__API_CACHE[$url];
   }
 
   /**
@@ -370,6 +381,29 @@ class WeatherDataService {
       ],
     ];
 
+  }
+
+  /**
+   * Get the current weather conditions at a location.
+   *
+   * The location is taken from the provided route.
+   *
+   * @return array
+   *   The current conditions as an associative array, or
+   *   NULL if no route is provided, or the provided route is not on the grid.
+   */
+  public function getCurrentConditions($route) {
+    // If this isn't a grid route, don't do anything. We can only respond to
+    // requests on the grid.
+    if ($route->getRouteName() != "weather_routes.grid") {
+      return NULL;
+    }
+
+    $wfo = $route->getParameter("wfo");
+    $gridX = $route->getParameter("gridX");
+    $gridY = $route->getParameter("gridY");
+
+    return $this->getCurrentConditionsByGrid($wfo, $gridX, $gridY);
   }
 
   /**

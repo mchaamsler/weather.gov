@@ -132,6 +132,7 @@ final class WeatherBlockBaseTest extends TestCase {
         "x" => "grid x",
         "y" => "grid y",
       ],
+      "geometry" => null,
     ];
 
     $actual = $this->currentConditionsBlock->getLocation();
@@ -153,6 +154,7 @@ final class WeatherBlockBaseTest extends TestCase {
         "x" => "ex",
         "y" => "why",
       ],
+      "geometry" => null,
     ];
 
     $actual = $this->currentConditionsBlock->getLocation();
