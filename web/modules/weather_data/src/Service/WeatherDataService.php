@@ -244,12 +244,11 @@ class WeatherDataService {
    * Get a place from a latitude and longitude.
    */
   public function getPlaceFromLatLon($lat, $lon) {
-    $point = $this->getFromWeatherAPI("https://api.weather.gov/points/$lat,$lon");
-    $place = $point->properties->relativeLocation->properties;
+    $place = $this->getFromWeatherAPI("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location=$lon,$lat&f=json&featureTypes=POI");
 
     return (object) [
-      "city" => $place->city,
-      "state" => $place->state,
+      "city" => $place->address->City,
+      "state" => $place->address->RegionAbbr,
     ];
   }
 
