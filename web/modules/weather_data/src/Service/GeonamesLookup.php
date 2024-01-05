@@ -18,7 +18,8 @@ class GeonamesLookup
             $city = $row[1] ?? null;
             $state = $row[10] ?? null;
             $countryCode = $row[8] ?? null;
-            if($lat && $lon && $city && $state && $countryCode == "US"){
+            $isValidPPL = str_starts_with($row[7] ?? "", "PPL");
+            if($lat && $lon && $city && $state && $countryCode == "US" && $isValidPPL){
                 array_push(
                     $this->rows,
                     [
