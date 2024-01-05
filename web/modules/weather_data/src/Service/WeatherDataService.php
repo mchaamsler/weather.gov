@@ -265,14 +265,21 @@ class WeatherDataService
     public function getPlaceFromGrid($wfo, $x, $y)
     {
         $geometry = $this->getGeometryFromGrid($wfo, $x, $y);
-        $origin = $geometry[0];
-        $corner = array_key_last($geometry);
-        $point = [
-          $corner[0] - $origin[0],
-          $corner[1] - $origin[1]
-        ];
 
-        return $this->getPlaceFromLatLon($point[0], $point[1]);
+        // We want to use the "center point" of the provided
+        // geometry, which in this case is a rectangle.
+        // Note that the bottom right corner is at
+        // index [3], and that the origin (top left corner)
+        // appears at both [0] _and_ [4]
+        $origin = $geometry[0];
+        $corner = $geometry[3];
+        $latDiff = ($corner->lat - $origin->lat);
+        $lonDiff = ($corner->lon - $origin->lon);
+        $centerLat = $origin->lat + (($corner->lat - $origin->lat) / 2);
+        $centerLon = $origin->lon + (($corner->lon - $origin->lon) / 2);
+                   
+
+        return $this->getPlaceFromLatLon($centerLat, $centerLon);
     }
 
     /**
