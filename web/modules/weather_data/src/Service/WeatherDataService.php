@@ -67,6 +67,12 @@ class WeatherDataService
      */
     private $apiCache;
 
+  /**
+   * Instance of Geonames collection
+   *
+   * @var geonames
+   */
+  private $geonames;
     /**
      * Constructor.
      */
@@ -86,6 +92,8 @@ class WeatherDataService
         $this->legacyMapping = json_decode(
             file_get_contents(__DIR__ . "/legacyMapping.json"),
         );
+
+        $this->geonames = GeonamesLookup::getInstance();
     }
 
     /**
@@ -257,9 +265,14 @@ class WeatherDataService
     public function getPlaceFromGrid($wfo, $x, $y)
     {
         $geometry = $this->getGeometryFromGrid($wfo, $x, $y);
-        $point = $geometry[0];
+        $origin = $geometry[0];
+        $corner = array_key_last($geometry);
+        $point = [
+          $corner[0] - $origin[0],
+          $corner[1] - $origin[1]
+        ];
 
-        return $this->getPlaceFromLatLon($point->lat, $point->lon);
+        return $this->getPlaceFromLatLon($point[0], $point[1]);
     }
 
     /**
@@ -267,15 +280,21 @@ class WeatherDataService
      */
     public function getPlaceFromLatLon($lat, $lon)
     {
-        $point = $this->getFromWeatherAPI(
-            "https://api.weather.gov/points/$lat,$lon",
-        );
-        $place = $point->properties->relativeLocation->properties;
+        // $point = $this->getFromWeatherAPI(
+        //     "https://api.weather.gov/points/$lat,$lon",
+        // );
+        // $place = $point->properties->relativeLocation->properties;
 
-        return (object) [
-            "city" => $place->city,
-            "state" => $place->state,
-        ];
+        // return (object) [
+        //     "city" => $place->city,
+        //     "state" => $place->state,
+        // ];
+
+      $point = $this->geonames->lookup($lat, $lon);
+      return (object) [
+        "city" => $point[2],
+        "state" => $point[3]
+      ];
     }
 
     /**
