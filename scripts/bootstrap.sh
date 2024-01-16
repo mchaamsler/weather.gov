@@ -18,11 +18,3 @@ chmod 600 ${app_path}/idp_public_key.crt
 
 ## NewRelic configuration
 NEWRELIC_LICENSE=$(echo $VCAP_SERVICES | jq -r '."user-provided"[].credentials.NEWRELIC_KEY')
-# export apt_path="${home}/deps/0/apt"
-# export newrelic_apt="${apt_path}/usr/lib/newrelic-php5"
-# export newrelic_app="${app_path}/newrelic/"
-# ln -s ${newrelic_apt}/agent ${newrelic_app}/agent
-# rm -f ${newrelic_app}/daemon/newrelic-daemon.x64
-# ln -s ${apt_path}/usr/bin/newrelic-daemon ${newrelic_app}/daemon/newrelic-daemon.x64
-# rm -f ${app_path}/newrelic/scripts/newrelic-iutil.x64
-# ln -s ${newrelic_apt}/scripts/newrelic-iutil.x64 ${newrelic_app}/scripts/newrelic-iutil.x64
