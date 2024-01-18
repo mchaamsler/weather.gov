@@ -17,4 +17,4 @@ chmod 600 ${app_path}/sp_private_key.pem
 chmod 600 ${app_path}/idp_public_key.crt
 
 ## NewRelic configuration
-NEWRELIC_LICENSE=$(echo $VCAP_SERVICES | jq -r '."user-provided"[].credentials.NEWRELIC_KEY')
+# export NEWRELIC_LICENSE=$(echo $VCAP_SERVICES | jq -r '."user-provided"[].credentials.NEWRELIC_KEY')
