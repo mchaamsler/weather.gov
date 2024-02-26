@@ -346,7 +346,7 @@ const loadLeafletRadar = () => {
           setTimeout(nextImage, 500);
         }
       };
-      // nextImage();
+      nextImage();
     })
     .finally(() => {
       leaflet.polygon(countyBounds, { color: "yellow" }).addTo(map);
