@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/themes/new_weather_theme/assets/css/styles.css"
+    />
+
+    <!-- leaflet styles -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/leaflet.css" />
+  </head>
+  <body>
+    <main role="main" class="flex-1 grid-container">
+      <h2>Leaflet with NCEP hazards</h2>
+
+      <p>
+        This map uses Leaflet as the mapping library, OpenStreetMap as the base
+        map, and NCEP's geospatial WMS services for radar and hazards.
+      </p>
+
+      <div class="usa-alert usa-alert--warning margin-y-4">
+        <div class="usa-alert__body">
+          <h4 class="usa-alert__heading">Risks</h4>
+          <div class="usa-alert__text">
+            <p>
+              This approach loads four WMS layers: OpenStreetMaps, NCEP
+              reflectivity, NCEP hazards (long-fuse), and NCEP warnings
+              (short-fuse). Each additional layer creates a significant amount
+              of network traffic on user devices, potentially having a
+              significant impact on the user experience.
+            </p>
+            <p>
+              More significantly, NCEP's WMS layers are rate-limited
+              cumulatively, not individually. Whereas using a single NCEP layer
+              may count as 50-100 requests, two layers would be 100-200
+              requests, and three layers would be 150-300 requests. The more
+              layers we use from NCEP, the faster our users will hit the rate
+              limit and be unable to load <strong><em>ANY</em></strong> NCEP
+              layers.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div id="weathergov_location_radar" style="height: 500px">
+        <div
+          id="weathergov_location_radar_timestamp"
+          class="z-top bg-white padding-1 margin-1 radius-lg text-bold"
+          style="position: absolute; bottom: 0"
+        ></div>
+      </div>
+
+      <h3>Use cases for MVP</h3>
+
+      <ul>
+        <li>
+          I want to view radar reflectivity over time to see how precipitation
+          is forming around me
+        </li>
+        <li>I want to view an active hazard on a map to see if I'm impacted</li>
+      </ul>
+
+      <h3>Musts for MVP include:</h3>
+
+      <ul>
+        <li>Can support radar reflectivity and hazard area</li>
+        Yes. From
+        <a href="https://opengeo.ncep.noaa.gov/geoserver/www/index.html"
+          >NCEP's geospatial services</a
+        >. These services also include layers for hazards (long-fuse) and
+        warnings (short-fuse). Loading additional layers creates additional
+        delays before the map is fully populated, but the page load time is not
+        affected.
+        <li>
+          Work on desktop and mobile (is there a bandwidth minimum required)
+        </li>
+        Works fine. Bandwidth requirements will be about the same either way.
+        Mobile users may have slightly reduced bandwidth requirements because
+        their viewport is narrower and, as a result, they load fewer image
+        tiles, but it would be negligible.
+        <li>Load quickly (determine time threshold)</li>
+        The primary source of initial load time will be fetching the Javascript
+        and image tiles. The Javascript can be cached in the browser for long
+        periods of time, so this should be a one-time cost. The cost of loading
+        image tiles is independent of what map library we use.
+        <li>Display a marker for my location</li>
+        Yes. We can put all kinds of things on the map ourselves. Because it's
+        under our control, we also have control over styling it, including
+        making the point "ping" in an animated way to help draw the user's
+        attention.
+        <li>
+          Automatically zooms and aligns location pin in the center of map (need
+          to determine zoom level)
+        </li>
+        Setting the initial location and zoom will require custom code in every
+        case, but it should be pretty minimal. For Leaflet, it's very
+        straightforward. The "hard" part will be getting the location
+        information embedded into the page so the map code can access it, but
+        we're already addressing that elsewhere so it shouldn't be a problem.
+        <li>Zoom</li>
+        Yes. Leaflet provides buttons and responds in expected ways to trackpad
+        and touchscreens (pinch to zoom, etc.).
+        <li>
+          Base Map must include
+          <ul>
+            <li>State borders</li>
+            OpenStreetMap has state borders.
+            <li>Names of cities and towns</li>
+            OpenStreetMap has cities and towns.
+            <li>Major roads</li>
+            OpenStreetMap has roads. At more zoomed out, this is only major
+            roads, but as you zoom in, more and more arterial and surface roads
+            come into view. It's possible that this is actually too cluttered
+            and makes it harder to understand.
+            <li>County borders (will this impact load)</li>
+            OpenStreetMap has county borders if you zoom in far enough. They're
+            faint and not labeled, so they're hard to make out. If we wanted
+            more distinct county boundaries, we'd need to use either a different
+            base map or add a county border layer on top of this map. Adding
+            layers increases the time for the map to fully load.
+          </ul>
+        </li>
+        <li>Supports animation</li>
+        Not directly. We have to handle animation in custom code by stepping
+        through timestamps in the WMS layer.
+        <li>Supports timestamp</li>
+        Not directly. We have to create, place, and manage the timestamp label.
+        <li>Supports a legend for defitions</li>
+        Not directly. We would have to create this.
+      </ul>
+    </main>
+    <script type="module" src="js/leaflet-ncep-hazards.js"></script>
+  </body>
+</html>
