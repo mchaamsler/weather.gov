@@ -3,8 +3,6 @@ import * as leaflet from "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.j
 const loadLeafletRadar = () => {
   const point = [36.1622, -86.7744];
 
-  return;
-
   const map = leaflet
     .map("weathergov_location_radar")
     .setView([36.1622, -86.7744], 9);
