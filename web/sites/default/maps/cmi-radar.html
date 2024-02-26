@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/themes/new_weather_theme/assets/css/styles.css"
+    />
+
+    <!-- CMI styles -->
+    <link rel="stylesheet" href="css/cmi-radar.1185c3ee.css" />
+
+    <link rel="stylesheet" href="css/base.css" />
+  </head>
+  <body>
+    <main role="main" class="flex-1 grid-container">
+      <h2>CMI (radar.gov)</h2>
+
+      <p>
+        This map uses Leaflet as the mapping library, OpenStreetMap as the base
+        map, and NCEP's geospatial WMS services for radar and hazards.
+      </p>
+
+      <div class="usa-alert usa-alert--warning margin-y-4">
+        <div class="usa-alert__body">
+          <h4 class="usa-alert__heading">Risks</h4>
+          <div class="usa-alert__text">
+            <p>tktk</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="height: 500px">
+        <div id="weathergov_location_radar">
+          <div
+            id="weathergov_location_radar_timestamp"
+            class="z-top bg-white padding-1 margin-1 radius-lg text-bold"
+            style="position: absolute; bottom: 0"
+          ></div>
+        </div>
+      </div>
+
+      <h3>Use cases for MVP</h3>
+
+      <ul>
+        <li>
+          I want to view radar reflectivity over time to see how precipitation
+          is forming around me
+        </li>
+        <li>I want to view an active hazard on a map to see if I'm impacted</li>
+      </ul>
+
+      <h3>Musts for MVP include:</h3>
+
+      <ul>
+        <li>Can support radar reflectivity and hazard area</li>
+        <li>
+          Work on desktop and mobile (is there a bandwidth minimum required)
+        </li>
+        <li>Load quickly (determine time threshold)</li>
+        <li>Display a marker for my location</li>
+        <li>
+          Automatically zooms and aligns location pin in the center of map (need
+          to determine zoom level)
+        </li>
+        <li>Zoom</li>
+        <li>
+          Base Map must include
+          <ul>
+            <li>State borders</li>
+            <li>Names of cities and towns</li>
+            <li>Major roads</li>
+            <li>County borders (will this impact load)</li>
+          </ul>
+        </li>
+        <li>Supports animation</li>
+        <li>Supports timestamp</li>
+        <li>Supports a legend for defitions</li>
+      </ul>
+    </main>
+    <script type="module" src="js/cmi.js"></script>
+  </body>
+</html>
