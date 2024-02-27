@@ -16,16 +16,41 @@
     <main role="main" class="flex-1 grid-container">
       <h2>CMI (radar.gov)</h2>
 
-      <p>
-        This map uses Leaflet as the mapping library, OpenStreetMap as the base
-        map, and NCEP's geospatial WMS services for radar and hazards.
-      </p>
+      <p>This map is the CMI library from radar.weather.gov.</p>
 
       <div class="usa-alert usa-alert--warning margin-y-4">
         <div class="usa-alert__body">
           <h4 class="usa-alert__heading">Risks</h4>
           <div class="usa-alert__text">
-            <p>tktk</p>
+            <p>
+              Bandwidth requirements are slightly higher than with Leaflet
+              because CMI bundles OpenLayers and Vue, two libraries that make it
+              easier to build CMI. This ought to be a one-time penalty for any
+              given user, as the Javascript required should be aggressively
+              cached. Updates to CMI should bust the cache because each version
+              has a different filename.
+            </p>
+            <p>
+              Because Vue and OpenLayers are bundled into CMI, we end up
+              inheriting them as 3rd-party dependencies but without any control
+              over them. The principal risk is that OpenLayers or Vue could
+              develop new vulnerabilities and we will be powerless to update to
+              newer versions to mitigate them ourselves. We will become entirely
+              reliant on radar.weather.gov to push updates, and we won't get
+              those updates for free because the filename will change, requiring
+              us to modify our code to fetch the newest version.
+            </p>
+            <p>
+              <strong>Context:</strong> Vue has not had a known vulnerability
+              since March, 2018. It is downright impossible to find the last
+              vulnerability in OpenLayers, which is concerning.
+            </p>
+            <p>
+              <strong>Context:</strong> The kinds of vulnerabilities that these
+              libraries could introduce would impact users, not NWS data or
+              systems. They should still be fixed as quickly as possible, but it
+              seemed worth pointing out where the risk is.
+            </p>
           </div>
         </div>
       </div>
@@ -54,28 +79,59 @@
 
       <ul>
         <li>Can support radar reflectivity and hazard area</li>
+        Yep. Getting hazards to display in this prototype has been funky, but
+        that is likely a result of just not knowing the right configuration to
+        pass into the map.
         <li>
           Work on desktop and mobile (is there a bandwidth minimum required)
         </li>
+        Yep. Just as well as the other options.
         <li>Load quickly (determine time threshold)</li>
+        Because CMI is based on (and bundles with it) Vue, a DOM management
+        library, it is a good bit bulkier than using Leaflet. The bundle clocks
+        in at around 750 kb, versus Leaflet which is about 100 kb. The page load
+        should not be affected by this as the script won't start to load until
+        most of the page has finished loading, but the time between "page load"
+        and "map available" could be a bit longer here.
         <li>Display a marker for my location</li>
+        Unclear. It's probably
+        <em>possible</em
+        >, but at first blush, the level of effort may be a touch higher. CMI
+        appears to be using OpenLayers under the hood, which is well documented.
         <li>
           Automatically zooms and aligns location pin in the center of map (need
           to determine zoom level)
         </li>
+        Not "automatic," but equally straightforward as Leaflet. It also has
+        built-in functionality to go directly to the user's location using their
+        browser location data. (The user has to initiate this.)
         <li>Zoom</li>
+        Yes.
         <li>
           Base Map must include
           <ul>
             <li>State borders</li>
+            Yes.
             <li>Names of cities and towns</li>
+            Yes.
             <li>Major roads</li>
+            Yes.
             <li>County borders (will this impact load)</li>
+            At very high zoom levels, yes. For Davidson County, TN, by the time
+            county borders showed up, I was zoomed in so far that I could only
+            see one border at a time, making it difficult to actually see the
+            entire county.
           </ul>
         </li>
+        This base map is an ESRI map. It may be possible to pass additional
+        configuration into CMI to customize how the base map appears. It also
+        may not be possible!
         <li>Supports animation</li>
+        Yes. Animation and playback controls are built in.
         <li>Supports timestamp</li>
+        Yes.
         <li>Supports a legend for defitions</li>
+        Yes.
       </ul>
     </main>
     <script type="module" src="js/cmi.js"></script>

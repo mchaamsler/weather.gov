@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "https://radar.weather.gov/cmi-radar/cmi-radar.1185c3ee.js",
   );
 
+  const point = [36.1622, -86.7744];
+
   script.addEventListener("load", () => {
     const options = {
       settings: {
@@ -22,8 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
             state: false,
           },
           animating: false,
-          zoom: 4,
-          center: [-95, 37],
+          zoom: 9,
+          center: [point[1], point[0]],
           location: null,
         },
         agenda: null,
