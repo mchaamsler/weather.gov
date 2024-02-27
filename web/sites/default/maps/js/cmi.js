@@ -1,7 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
   const script = document.createElement("script");
   script.setAttribute("type", "text/javascript");
-  script.setAttribute("src", "js/cmi-radar.1185c3ee.js");
+  script.setAttribute(
+    "src",
+    "https://radar.weather.gov/cmi-radar/cmi-radar.1185c3ee.js",
+  );
 
   script.addEventListener("load", () => {
     const options = {
