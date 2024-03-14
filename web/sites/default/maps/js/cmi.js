@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "https://radar.weather.gov/cmi-radar/cmi-radar.1185c3ee.js",
   );
 
-  const point = [36.1622, -86.7744];
+  const point = [-86.7744, 36.1622];
 
   script.addEventListener("load", () => {
     const options = {
@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           animating: false,
           zoom: 9,
-          center: [point[1], point[0]],
-          location: null,
+          center: point,
+          location: point,
         },
         agenda: null,
         layers: {
@@ -57,6 +57,9 @@ document.addEventListener("DOMContentLoaded", () => {
       "#weathergov_location_radar",
       options,
     );
+    window.app.$store.dispatch("markLocation", point);
+
+    document.querySelector(".cmi-radar-menu").remove();
   });
 
   document.body.appendChild(script);
