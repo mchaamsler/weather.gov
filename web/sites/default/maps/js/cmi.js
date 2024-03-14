@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     window.app.$store.dispatch("markLocation", point);
 
-    document.querySelector(".cmi-radar-menu").remove();
+    document.querySelector(".cmi-radar-menu-container").remove();
     document.querySelector(".cmi-radar-menu-agendas").remove();
   });
 
