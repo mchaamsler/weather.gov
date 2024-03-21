@@ -194,4 +194,4 @@ class TabbedNavigator extends HTMLElement {
   }
 }
 
-window.customElements.define("tabbed-nav", TabbedNavigator);
+window.customElements.define("wx-tabbed-nav", TabbedNavigator);
